@@ -7,11 +7,11 @@ class PositionwiseFeedForward(nn.Module):
         super().__init__()
         self.d_model=d_model
         self.d_ff=d_ff
-        self.layer1=Linear(d_model,d_ff)
-        self.layer2=Linear(d_ff,d_model)
-        self.layer3=Linear(d_model,d_ff)
+        self.w1=Linear(d_model,d_ff)
+        self.w2=Linear(d_ff,d_model)
+        self.w3=Linear(d_model,d_ff)
     def silu(self,x:torch.Tensor):
         return x*torch.sigmoid(x)
     def forward(self,x:torch.Tensor):
-        return self.layer2(self.silu(self.layer1(x))*self.layer3(x))
+        return self.w2(self.silu(self.w1(x))*self.w3(x))
 

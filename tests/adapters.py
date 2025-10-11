@@ -14,9 +14,9 @@ from cs336_basics.Linear import Linear
 from cs336_basics.Embedding import Embedding
 from cs336_basics.RMSNorm import RMSNorm
 from cs336_basics.PositionwiseFeedForward import PositionwiseFeedForward
-# from cs336_basics.RotaryPositionalEmbedding import RotaryPositionalEmbedding
-# from cs336_basics.Attention import softmax, scaled_dot_product_attention, MultiheadSelfAttention
-# from cs336_basics.Transformer import Transformer, TransformerLM
+from cs336_basics.RotaryPositionalEmbedding import RotaryPositionalEmbedding
+from cs336_basics.Attention import softmax, scaled_dot_product_attention, MultiheadSelfAttention
+from cs336_basics.Transformer import Transformer, TransformerLM
 # from cs336_basics.Loss import cross_entropy_loss
 
 
