@@ -19,7 +19,7 @@ from cs336_basics.Attention import softmax, scaled_dot_product_attention, Multih
 from cs336_basics.Transformer import Transformer, TransformerLM
 from cs336_basics.Loss import cross_entropy_loss,AdamW
 from cs336_basics.Learning_rate import lr_cosine_schedule,clip_grad_l2_
-from cs336_basics.DataLoader import get_batch
+from cs336_basics.DataLoader import get_batch,load_checkpoint,save_checkpoint
 
 
 def run_linear(
@@ -602,7 +602,7 @@ def run_save_checkpoint(
             we've completed.
         out (str | os.PathLike | BinaryIO | IO[bytes]): Path or file-like object to serialize the model, optimizer, and iteration to.
     """
-    raise NotImplementedError
+    return save_checkpoint(model,optimizer,iteration,out)
 
 
 def run_load_checkpoint(
@@ -623,7 +623,7 @@ def run_load_checkpoint(
     Returns:
         int: the previously-serialized number of iterations.
     """
-    raise NotImplementedError
+    return load_checkpoint(src,model,optimizer)
 
 
 def get_tokenizer(
