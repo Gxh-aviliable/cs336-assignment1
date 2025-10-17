@@ -2,21 +2,27 @@ import torch
 import torch.nn as nn
 import os
 import argparse
-from Transformer import TransformerLM
-from Learning_rate import lr_cosine_schedule,clip_grad_l2_
+from .Transformer import TransformerLM
+from .Learning_rate import lr_cosine_schedule,clip_grad_l2_
 import wandb
 from loguru import logger
 import json,yaml
 from pathlib import Path
 import numpy as np
 from tqdm import tqdm
-from Loss import  AdamW,cross_entropy_loss
-from DataLoader import get_batch,load_checkpoint,save_checkpoint,evaluate_model
+from .Loss import  AdamW,cross_entropy_loss
+from .DataLoader import get_batch,load_checkpoint,save_checkpoint,evaluate_model
+
+
+import sys, os
+sys.path.append(os.path.dirname(__file__))
+
+
 def build_argparse() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Train TransformerLM with CLI controllable hyperparams")
 
     # logging
-    p.add_argument("--log_file", type=str, default="./data/log/train_v0.log")
+    p.add_argument("--log_file", type=str, default="D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\log\\train_v0.log")
     p.add_argument("--log_rotation", type=str, default="1 day")
     p.add_argument("--log_retention", type=str, default="7 days")
     p.add_argument("--log_level", type=str, default="INFO")
@@ -48,13 +54,13 @@ def build_argparse() -> argparse.ArgumentParser:
     p.add_argument("--val_batches", type=int, default=20)
 
     # data
-    p.add_argument("--training_dataset_path", type=str, default="./data/token/TinyStories_train_10000_token_ids.npy")
-    p.add_argument("--validation_dataset_path", type=str, default="./data/token/TinyStories_valid_10000_token_ids.npy")
+    p.add_argument("--training_dataset_path", type=str, default="D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\token\\TinyStories_train_10000_token_ids.npy")
+    p.add_argument("--validation_dataset_path", type=str, default="D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\token\\TinyStories_valid_10000_token_ids.npy")
 
     # checkpoint io
     p.add_argument("--checkpoint_load_path", type=str, default=None)
-    p.add_argument("--checkpoint_save_format", type=str, default="./data/model/checkpoint_v0_{}.pt")
-    p.add_argument("--final_model_path", type=str, default="./data/model/final_model_v0.pt")
+    p.add_argument("--checkpoint_save_format", type=str, default="D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\model\\checkpoint_v0_{}.pt")
+    p.add_argument("--final_model_path", type=str, default="D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\model\\final_model_v0.pt")
 
     # wandb
     p.add_argument("--wandb_project", type=str, default="cs336-assignment-1")
@@ -127,7 +133,7 @@ def main():
     args=parser.parse_args()
 
     Path(os.path.dirname(args.log_file) or ".").mkdir(parents=True, exist_ok=True)
-    logger.add(args.log_file,rotation=args.log_rotation,rentention=args.log_rentention,level=args.log_level)
+    logger.add(args.log_file,rotation=args.log_rotation,retention=args.log_retention,level=args.log_level)
 
     #随机种子
     torch.manual_seed(args.seed)
@@ -138,6 +144,10 @@ def main():
         device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     else :
         device =torch.device(args.device)
+
+    print(f"当前设备: {device}")
+    if torch.cuda.is_available():
+        print(f"GPU 名称: {torch.cuda.get_device_name(device)}")
 
     # 组装配置（为了 wandb 与日志打印）
     model_config, optim_config, train_config, data_paths = args_to_configs(args)
@@ -165,8 +175,7 @@ def main():
         d_model=model_config["d_model"],
         d_ff=model_config["d_ff"],
         rope_theta=model_config["rope_theta"],
-        device=device,
-    )
+    ).to(device)
     logger.info("模型初始化完成。")
 
     optimizer = AdamW(model.parameters(),
@@ -181,7 +190,7 @@ def main():
     start_iter =1
     if data_paths["checkpoint_load_path"] :
         logger.info(f"开始加载模型检查点:{data_paths['checkpoint_load_path']}")
-        start_iter=load_checkpoint(data_paths[""],model=model,optimizer=optimizer)
+        start_iter=load_checkpoint(data_paths['checkpoint_load_path'],model=model,optimizer=optimizer)
         start_iter+=1
         logger.info(f"模型检查点加载成功，当前迭代次数: {start_iter}")
     else:
@@ -214,7 +223,7 @@ def main():
             pg["lr"]=lr_now
         #bacth
         inputs,outputs=get_batch(training_dataset,train_config["batch_size"],
-                                 train_config["context_length"],device=device)
+                                 model_config["context_length"],device=device)
         #训练
         logits=model(inputs)
         #损失

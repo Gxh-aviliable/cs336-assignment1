@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from Loss import cross_entropy_loss
+from .Loss import cross_entropy_loss
 
 def get_batch(x:np.ndarray,batch_size:int,context_length,device:torch.device | None=None):
     """

@@ -269,7 +269,8 @@ if __name__ == "__main__":
     # p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(20)  # 显示累计时间最长的20个函数
 
     # Example usage
-    input_path = "./data/TinyStoriesV2-GPT4-train.txt"
+    #input_path = "../data/TinyStoriesV2-GPT4-train.txt"
+    input_path="D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\TinyStoriesV2-GPT4-valid.txt"
     vocab_size = 10000
     special_tokens = ["<|endoftext|>"]
     trainer = BPETrainer(vocab_size, special_tokens)
@@ -277,8 +278,8 @@ if __name__ == "__main__":
     # cProfile.run('trainer.train(input_path)', 'tokenizer_stats')
     # p = pstats.Stats('tokenizer_stats')
     # p.strip_dirs().sort_stats(pstats.SortKey.CUMULATIVE).print_stats(20)
-    trainer.to_files("./data/output/TinyStories_train_10000_token_vocab.bin",
-                     "./data/output/TinyStories_train_10000_merges.bin")
+    trainer.to_files("D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\output\\TinyStories_valid_10000_token_vocab.bin",
+                     "D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\output\\TinyStories_valid_10000_merges.bin")
 
     # print("Token Vocabulary:")
     # for idx, token in token_vocab.items():

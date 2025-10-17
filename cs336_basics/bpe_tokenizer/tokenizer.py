@@ -206,12 +206,12 @@ class BPETokenizer:
 if __name__ == "__main__":
     # Example usage
     special_tokens = ["<|endoftext|>"]
-    vocab_path = "./data/token/TinyStories_train_10000_token_vocab.bin"
-    mergers_path = "./data/token/TinyStories_train_10000_merges.bin"
-    input_path = "./data/TinyStoriesV2-GPT4-valid.txt"
-    # input_path = "./data/TinyStoriesV2-GPT4-train.txt"
+    vocab_path = "D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\output\\TinyStories_train_10000_token_vocab.bin"
+    mergers_path = "D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\output\\TinyStories_train_10000_merges.bin"
+    input_path = "D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\TinyStoriesV2-GPT4-valid.txt"
+    # input_path = "./data/TinyStoriesV2-GPT4-train.txt"s
     tokenizer = BPETokenizer.from_files(vocab_path, mergers_path, special_tokens)
-    output_path = "./data/token/TinyStories_valid_10000_token_ids.npy"
+    output_path = "D:\\learn and learn\\cs336\\assignment1\\cs336_basics\\data\\token\\TinyStories_valid_10000_token_ids.npy"
     tokenizer.encode_to_npfile(input_path, output_path)
 
     # with open(input_path, 'r', encoding='utf-8') as f:

@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from typing import Callable, Optional, Iterable
 import math
+
 def cross_entropy_loss(logits:torch.Tensor,targets=torch.Tensor):
     """logits 的维度 (B,S,Vocab_size)
     targets 的维度 为 B S
